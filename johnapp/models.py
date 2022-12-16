@@ -25,3 +25,4 @@ class pool(models.Model):
     location = models.CharField(_("location"),max_length=100)
     pnumber = models.CharField(_("pnumber"),max_length=100)
     interest = models.CharField(_("interest"),max_length=100)
+    
