@@ -30,8 +30,13 @@ def index(request):
             # target_group=registermodeljson[0]['target_group']
             # print("data collected from forms:",event_name,event_type,event_date,duration,venue,target_group)
             ai=aimodel(registermodeljson[0])
+            
+            no_of_participants=find_no_participtants(registermodeljson[0]["event_type"])    
+            names_of_participants = find_participants(registermodeljson[0]["event_type"])
+            print("Number of Matches found for the interest ", registermodeljson[0]['event_type']," is ",no_of_participants,". And there names are: ",names_of_participants)    
+
             if ai:
-                return render(request, 'aimodel.html', {'ai':ai})
+                return render(request, 'aimodel.html', {'ai':ai,"names_of_participants":names_of_participants,"no_of_participants":no_of_participants})
 
            # aimodel(registermodeljson)
             return render(request, 'index.html', {'registermodeljson': registermodeljson,'ai':ai})
@@ -39,7 +44,9 @@ def index(request):
         form = RegisterForm()
     return render(request, 'index.html', {'form': form})
 
+#creates AI message
 def aimodel(request):
+
     event_name=request['event_name']
     event_type=request['event_type']
     event_date=request['event_date']
@@ -83,10 +90,8 @@ def aimodel(request):
     # Define email sender and receiver
     email_sender = 'wel.ai.marketing@gmail.com'
     email_password = 'zwrp btjp foxt whsp'
-    email_receiver = 'raynould2000@gmail.com'
+    email_receiver = 'johns.baby@mca.christuniversity.in'
 
-    # Set the subject and body of the email
-    subject = 'Check out my new video!exit'
     body = k
 
     em = EmailMessage()
@@ -109,11 +114,15 @@ def aimodel(request):
 
 
     return eventandinv
-# Create your views here.
 
+
+# finds the names of the participants
 def find_participants(interest):
     users_all=pool.objects.all().filter(interest=interest)
-    return users_all
+    lst=[]
+    for i in users_all:
+        lst.append(i.name)
+    return lst
 
 def find_no_participtants(interest):
     users_all=pool.objects.all().filter(interest=interest)
