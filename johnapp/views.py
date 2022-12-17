@@ -44,7 +44,7 @@ def index(request):
         form = RegisterForm()
     return render(request, 'index.html', {'form': form})
 
-#creates AI message
+#creating content for the email
 def aimodel(request):
 
     event_name=request['event_name']
@@ -53,7 +53,8 @@ def aimodel(request):
     duration=request['duration']
     venue=request['venue']
     target_group=request['target_group']
-    
+
+    # query1 = "Name: "+event_name + "\nInterest: "+event_type + "\nEvent_Name: "+event_name + "\nDuration: "+duration + "\nVenue: "+venue +"\nDate: "+str(event_date)+"\n\nOutput: "
 
     users_all=pool.objects.filter()
     
@@ -66,11 +67,21 @@ def aimodel(request):
     key6 = "yWivkse6P"
     key = key1+key2+key3+key4+key5+key6
     
-    stext ="I recently saw a post by "+name+" on LinkedIn sharing his experience about a hackathon that he recently participated. Generate an Invitation mail to "+name+" inviting him to a "+duration+", "+event_type+" Hackathon conducted by "+venue+" on "+str(event_date)+". "
+    if 1:
+        query ="I recently saw a post by "+name+" on LinkedIn sharing his experience about a hackathon that he recently participated. Generate an Invitation mail to "+name+" inviting him to a "+duration+", "+event_type+" Hackathon conducted by "+venue+" on "+str(event_date)+" and mention that i'm inviting him because i saw his recent post on linkedin about his interest in attending hackthons. "
+    # print("query1",query1)
+
+
+    # Define email sender and receiver
+    email_sender = 'wel.ai.marketing@gmail.com'
+    email_password = 'zwrp btjp foxt whsp'
+    email_receiver = 'johns.baby@mca.christuniversity.in'
+    
+
     openai.api_key = key
     response = openai.Completion.create( 
         engine = "text-davinci-003",
-        prompt=stext,
+        prompt=query,
         temperature=0.1, # how deterministic should your response be, so higher the temp:lower precise it is
         max_tokens=500,
         top_p=1,
@@ -86,11 +97,6 @@ def aimodel(request):
         k+=content[i]
 
     print("filtered content",k)
-
-    # Define email sender and receiver
-    email_sender = 'wel.ai.marketing@gmail.com'
-    email_password = 'zwrp btjp foxt whsp'
-    email_receiver = 'johns.baby@mca.christuniversity.in'
 
     body = k
 
